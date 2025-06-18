@@ -21,8 +21,9 @@ std::mutex g_motor_mutex;
  */
 void channel_thread(int channel) {
     // 构造串口设备名
+    char channel_letter = 'A' + channel; // channel为0-3，对应A-D
     char port_name[20];
-    snprintf(port_name, sizeof(port_name), "/dev/ttyACM%d", channel);
+    snprintf(port_name, sizeof(port_name), "/dev/ttyMotor%c", channel_letter);
 
     // 初始化串口
     int fd = initialize_serial_port(port_name);

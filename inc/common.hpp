@@ -2,7 +2,7 @@
 #define COMMON_HPP
 
 // 定义系统常量
-#define NUM_CHANNELS 1         // 通道数量
+#define NUM_CHANNELS 4         // 通道数量
 #define MOTORS_PER_CHANNEL 3   // 每个通道的电机数量
 #define MAX_BUFFER_SIZE 1024   // 最大缓冲区大小
 #define GEAR_RATIO 6.33f       // 减速比
