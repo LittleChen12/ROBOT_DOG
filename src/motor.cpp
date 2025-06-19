@@ -1,6 +1,7 @@
 #include "motor.hpp"
 #include <cstring>
-
+#include <iostream>
+#include "common.hpp"
 // CRC（循环冗余校验）查找表
 // 这个表用于快速计算CRC值，提高计算效率
 static const uint16_t crc_ccitt_table[256] = {
@@ -84,6 +85,97 @@ void Motor::setControlParams(float tor_des, float spd_des, float pos_des, float 
     this->k_pos = k_pos;
     this->k_spd = k_spd;
 }
+
+void Motor::Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float spd_des, float pos_des, float k_pos, float k_spd)
+{
+    if(id == 0)
+    {
+        if(num == 0) {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des + 0.83411) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else if(num == 1)
+        {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des - 0.950479) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+
+        }
+        else if(num == 2)
+        {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des + 2.569027) * GEAR_RATIO * 1.88 - 3.1415926;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else
+        {
+            // 如果num不在预期范围内，打印错误信息
+            std::cerr << "Error: Invalid motor number " << num << ". Valid numbers are 0, 1, or 2." << std::endl;
+            return;
+        }
+    }
+    else if (id == 1)
+    {
+        if(num == 0) {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des + 0.83411) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else if(num == 1)
+        {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des - 0.950479) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+
+        }
+        else if(num == 2)
+        {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des + 2.569027) * GEAR_RATIO * 1.88 - 3.1415926;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else
+        {
+            // 如果num不在预期范围内，打印错误信息
+            std::cerr << "Error: Invalid motor number " << num << ". Valid numbers are 0, 1, or 2." << std::endl;
+            return;
+        }
+    }
+    else if (id == 2)
+    {
+        /* code */
+    }
+    else if (id == 3)
+    {
+        /* code */
+    }
+    else
+    {
+        // 如果id不在预期范围内，打印错误信息
+        std::cerr << "Error: Invalid motor ID " << id << ". Valid IDs are 0, 1, 2, or 3." << std::endl;
+        return;
+    }
+    // 设置电机控制参数
+    this->tor_des = tor_des;
+    this->spd_des = spd_des;
+    this->pos_des = pos_des;
+    this->k_pos = k_pos;
+    this->k_spd = k_spd;
+}
+
 
 // 更新电机反馈数据
 // 参数:

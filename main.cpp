@@ -158,24 +158,91 @@ int main(int argc, char* argv[]) {
                     float tor = 0.0f;
                     float spd = 0.0f; 
                     float pos = 0.0f;
-                    if(j == 0)
+                    if(i == 0)
                     {
-                        tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                        spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                        pos = g_motors[i][j].getPosition() / GEAR_RATIO - 0.83411;// 转换为输出端位置（- 0.83411是机械零点）            
+                        if(j == 0)
+                        {
+                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO - 0.917742;// 转换为输出端位置          
+                        }
+                        else if(j == 1)
+                        {
+                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = -(g_motors[i][j].getPosition() / GEAR_RATIO - 1.775659);// 转换为输出端位置                          
+                        }
+                        else
+                        {
+                            tor = g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
+                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 3.380047;// 转换为输出端位置
+                        }
                     }
-                    else if(j == 1)
+                    if(i == 1)
                     {
-                        tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                        spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                        pos = g_motors[i][j].getPosition() / GEAR_RATIO + 0.950479;// 转换为输出端位置（0.950479是机械零点）                             
+                        if(j == 0)
+                        {
+                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO - 0.83411;// 转换为输出端位置         
+                        }
+                        else if(j == 1)
+                        {
+                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO + 0.950479;// 转换为输出端位置                           
+                        }
+                        else
+                        {
+                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
+                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
+                            pos = -g_motors[i][j].getPosition()/ GEAR_RATIO / 1.88 - 2.831412;// 转换为输出端位置
+                        }
                     }
-                    else
+                    if(i == 2)
                     {
-                        tor = g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
-                        spd = g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                        pos = -(3.1415926+g_motors[i][j].getPosition()) / GEAR_RATIO / 1.88 - 2.569027;// 转换为输出端位置（- 2.569027是机械零点）
+                        if(j == 0)
+                        {
+                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO - 0.036858;// 转换为输出端位置        
+                        }
+                        else if(j == 1)
+                        {
+                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO + 1.4168;// 转换为输出端位置                        
+                        }
+                        else
+                        {
+                            tor = g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
+                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 3.2397;// 转换为输出端位置
+                        }
                     }
+                    if(i == 3)
+                    {
+                        if(j == 0)
+                        {
+                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO + 0.414653;// 转换为输出端位置        
+                        }
+                        else if(j == 1)
+                        {
+                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
+                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO + 0.42181;// 转换为输出端位置                       
+                        }
+                        else
+                        {
+                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
+                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
+                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 2.231182;// 转换为输出端位置
+                        }
+                    }
+
                     float temp = g_motors[i][j].getTemperature();
                     uint16_t err = g_motors[i][j].getError();
 

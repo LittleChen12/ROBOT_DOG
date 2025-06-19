@@ -113,6 +113,8 @@ public:
     
     // 重置统计信息
     void resetStats();
+    // 设置电机控制参数（重载函数，使用int16_t类型的ID和num）id为腿编号，num为每条腿上的电机编号
+    void Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float spd_des, float pos_des, float k_pos, float k_spd);
 
 private:
     // 控制参数
