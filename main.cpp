@@ -26,6 +26,24 @@ float g_pos_des = 0.0f;  // 目标位置
 float g_k_pos = 0.0f;    // 位置增益
 float g_k_spd = 0.0f;    // 速度增益
 
+float _targetPos_1[12] = {0.0, 1.36, -2.65, 0.0, 1.36, -2.65,
+                            -0.2, 1.36, -2.65, 0.2, 1.36, -2.65};
+
+float _targetPos_2[12] = {0.0, 0.67, -1.3, 0.0, 0.67, -1.3,
+                            0.0, 0.67, -1.3, 0.0, 0.67, -1.3};
+
+float _targetPos_3[12] = {-0.35, 1.36, -2.65, 0.35, 1.36, -2.65,
+                            -0.5, 1.36, -2.65, 0.5, 1.36, -2.65};
+
+float _duration_1 = 500;   
+float _duration_2 = 500; 
+float _duration_3 = 1000;   
+float _duration_4 = 900;   
+float _percent_1 = 0;    
+float _percent_2 = 0;    
+float _percent_3 = 0;    
+float _percent_4 = 0;  
+
 int main(int argc, char* argv[]) {
     // 检查命令行参数
     if (argc != 2) {
@@ -61,23 +79,23 @@ int main(int argc, char* argv[]) {
         // 速度模式：设置目标速度和速度增益
         g_tor_des = 0.0f;
         g_spd_des = 0.0f;
-        g_pos_des = 0.0f;
-        g_k_pos = 30.0f;
+        g_k_pos = 60.0f;
         g_k_spd = 5.0f;
-    }  
+        for (int i = 0; i < NUM_CHANNELS; ++i) {
+            for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                // 更新电机控制参数，考虑减速比
+                g_pos_des = _targetPos_1[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
+                
+                g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
+            }
+        }
+    } 
     else {
         std::cerr << "Invalid mode. Use 'stop', 'tor', or 'speed'.\n";
         return 1;
     }
 
     std::vector<std::thread> threads;
-
-    // 初始化电机控制参数
-    for (int i = 0; i < NUM_CHANNELS; ++i) {
-        for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
-            g_motors[i][j].setControlParams(0.0f, 0.0f, 0.0f, 0.0f, 0.0f);  // 初始化状态为0
-        }
-    }
 
     // 为每个通道创建线程
     for (int i = 0; i < NUM_CHANNELS; ++i) {
@@ -95,60 +113,69 @@ int main(int argc, char* argv[]) {
         }
     }
     std::cout << "All channel threads started." << std::endl;
-
+    std::this_thread::sleep_for(std::chrono::seconds(2));
     // 主循环
-    while (g_running) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+    while (g_running) 
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         {
             std::lock_guard<std::mutex> lock(g_motor_mutex);
 
-            for (int i = 0; i < NUM_CHANNELS; ++i) {
-                for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
-                    // 更新电机控制参数，考虑减速比
-                    if(j == 0) {
-                        g_tor_des = 0; 
-                        g_spd_des = 0; 
-                        g_pos_des = 0; 
-                        g_motors[i][j].setControlParams(
-                            g_tor_des / GEAR_RATIO,     // 转子端转矩 = 输出端转矩 / 减速比
-                            g_spd_des * GEAR_RATIO,     // 转子端速度 = 输出端速度 * 减速比
-                            (g_pos_des + 0.83411) * GEAR_RATIO,     // 转子端位置 = 输出端位置 * 减速比
-                            g_k_pos / GEAR_RATIO / GEAR_RATIO,  // 位置增益需要考虑两次减速比
-                            g_k_spd / GEAR_RATIO / GEAR_RATIO   // 速度增益需要考虑两次减速比
-                        );
-                    }
-                    else if(j == 1)
-                    {
-                        g_tor_des = 0; 
-                        g_spd_des = 0; 
-                        g_pos_des = 1.36; 
-                        g_motors[i][j].setControlParams(
-                            g_tor_des / GEAR_RATIO,     // 转子端转矩 = 输出端转矩 / 减速比
-                            g_spd_des * GEAR_RATIO,     // 转子端速度 = 输出端速度 * 减速比
-                            (g_pos_des - 0.950479) * GEAR_RATIO,     // 转子端位置 = 输出端位置 * 减速比
-                            g_k_pos / GEAR_RATIO / GEAR_RATIO,  // 位置增益需要考虑两次减速比
-                            g_k_spd / GEAR_RATIO / GEAR_RATIO   // 速度增益需要考虑两次减速比
-                        );
-                    }
-                    else
-                    {
-                        g_tor_des = 0; 
-                        g_spd_des = 0; 
-                        g_pos_des = -2.8; 
-                        g_motors[i][j].setControlParams(
-                            g_tor_des / GEAR_RATIO / 1.88,     // 转子端转矩 = 输出端转矩 / 减速比
-                            g_spd_des * GEAR_RATIO * 1.88,     // 转子端速度 = 输出端速度 * 减速比
-                            -(g_pos_des + 2.569027) * GEAR_RATIO * 1.88 - 3.1415926,     // 转子端位置 = 输出端位置 * 减速比
-                            g_k_pos / GEAR_RATIO / GEAR_RATIO,  // 位置增益需要考虑两次减速比
-                            g_k_spd / GEAR_RATIO / GEAR_RATIO   // 速度增益需要考虑两次减速比
-                        );
+            if (_percent_1 < 1){
+                _percent_1 += (float)1 / _duration_1;
+                _percent_1 = _percent_1 > 1 ? 1 : _percent_1;
+                for (int i = 0; i < NUM_CHANNELS; ++i) {
+                    for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                        // 更新电机控制参数，考虑减速比
+                        g_pos_des = _targetPos_1[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
+                        
+                        g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
                     }
                 }
             }
+            if ((_percent_1 == 1)&&(_percent_2 < 1))
+            {
+                _percent_2 += (float)1 / _duration_2;
+                _percent_2 = _percent_2 > 1 ? 1 : _percent_2;
+                for (int i = 0; i < NUM_CHANNELS; ++i) {
+                    for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                        // 更新电机控制参数，考虑减速比
+                        g_pos_des = (1 - _percent_2) * _targetPos_1[i * MOTORS_PER_CHANNEL + j] + _percent_2 * _targetPos_2[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
+                        
+                        g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
+                    }
+                }                
+            }
+            if ((_percent_1 == 1)&&(_percent_2 == 1)&&(_percent_3<1))
+            {
+                _percent_3 += (float)1 / _duration_3;
+                _percent_3 = _percent_3 > 1 ? 1 : _percent_3;
+                for (int i = 0; i < NUM_CHANNELS; ++i) {
+                    for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                        // 更新电机控制参数，考虑减速比
+                        g_pos_des = _targetPos_2[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
+                        
+                        g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
+                    }
+                }                    
+    
+            }
+            if ((_percent_1 == 1)&&(_percent_2 == 1)&&(_percent_3==1)&&((_percent_4<=1)))
+            {
+                _percent_4 += (float)1 / _duration_4;
+                _percent_4 = _percent_4 > 1 ? 1 : _percent_4;
+                for (int i = 0; i < NUM_CHANNELS; ++i) {
+                    for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                        // 更新电机控制参数，考虑减速比
+                        g_pos_des = (1 - _percent_4) * _targetPos_2[i * MOTORS_PER_CHANNEL + j] + _percent_4 * _targetPos_3[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
+                        
+                        g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
+                    }
+                }      
+            }
         }
-
-        // 打印电机状态
+        // 更新电机状态
         {
             std::lock_guard<std::mutex> lock(g_motor_mutex);
 
@@ -170,13 +197,13 @@ int main(int argc, char* argv[]) {
                         {
                             tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
                             spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = -(g_motors[i][j].getPosition() / GEAR_RATIO - 1.775659);// 转换为输出端位置                          
+                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO + 1.775659;// 转换为输出端位置                          
                         }
                         else
                         {
                             tor = g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
                             spd = g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 3.380047;// 转换为输出端位置
+                            pos = g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 3.205968;// 转换为输出端位置
                         }
                     }
                     if(i == 1)
@@ -197,7 +224,7 @@ int main(int argc, char* argv[]) {
                         {
                             tor = -g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
                             spd = -g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                            pos = -g_motors[i][j].getPosition()/ GEAR_RATIO / 1.88 - 2.831412;// 转换为输出端位置
+                            pos = -g_motors[i][j].getPosition()/ GEAR_RATIO / 1.88 - 2.6572986;// 转换为输出端位置
                         }
                     }
                     if(i == 2)
@@ -246,7 +273,7 @@ int main(int argc, char* argv[]) {
                     float temp = g_motors[i][j].getTemperature();
                     uint16_t err = g_motors[i][j].getError();
 
-                    // 打印电机状态（输出端的值）
+                    //打印电机状态（输出端的值）
                     std::cout << "Channel " << i << ", Motor " << j
                               << " - Output Torque: " << tor
                               << ", Output Speed: " << spd
@@ -257,7 +284,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // 打印统计信息
+        //打印统计信息
         print_statistics();
     }
 
@@ -269,6 +296,7 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
 
 /**
  * 打印统计信息

@@ -93,24 +93,24 @@ void Motor::Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float
         if(num == 0) {
             this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
             this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
-            this->pos_des =  (pos_des + 0.83411) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->pos_des =  (pos_des + 0.917742) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
             this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
             this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
         }
         else if(num == 1)
         {
-            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
-            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
-            this->pos_des =  (pos_des - 0.950479) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->tor_des =  -tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  -spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des - 1.775659) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
             this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
             this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
 
         }
         else if(num == 2)
         {
-            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
-            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
-            this->pos_des =  -(pos_des + 2.569027) * GEAR_RATIO * 1.88 - 3.1415926;     // 转子端位置 = 输出端位置 * 减速比
+            this->tor_des =  tor_des / GEAR_RATIO / 1.88;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO * 1.88;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des + 3.205968) * GEAR_RATIO * 1.88 ;     // 转子端位置 = 输出端位置 * 减速比
             this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
             this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
         }
@@ -141,9 +141,9 @@ void Motor::Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float
         }
         else if(num == 2)
         {
-            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
-            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
-            this->pos_des =  -(pos_des + 2.569027) * GEAR_RATIO * 1.88 - 3.1415926;     // 转子端位置 = 输出端位置 * 减速比
+            this->tor_des =  -tor_des / GEAR_RATIO / 1.88;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  -spd_des * GEAR_RATIO * 1.88;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des + 2.6572986) * GEAR_RATIO * 1.88;     // 转子端位置 = 输出端位置 * 减速比
             this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
             this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
         }
@@ -156,11 +156,69 @@ void Motor::Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float
     }
     else if (id == 2)
     {
-        /* code */
+        if(num == 0) {
+            this->tor_des =  -tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  -spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des + 0.036858) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else if(num == 1)
+        {
+            this->tor_des =  -tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  -spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des - 1.4168) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+
+        }
+        else if(num == 2)
+        {
+            this->tor_des =  tor_des / GEAR_RATIO / 1.88;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO * 1.88;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des + 3.2397) * GEAR_RATIO * 1.88;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else
+        {
+            // 如果num不在预期范围内，打印错误信息
+            std::cerr << "Error: Invalid motor number " << num << ". Valid numbers are 0, 1, or 2." << std::endl;
+            return;
+        }
     }
     else if (id == 3)
     {
-        /* code */
+        if(num == 0) {
+            this->tor_des =  -tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  -spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des - 0.414653) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else if(num == 1)
+        {
+            this->tor_des =  tor_des / GEAR_RATIO;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  spd_des * GEAR_RATIO;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  (pos_des - 0.42181) * GEAR_RATIO;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+
+        }
+        else if(num == 2)
+        {
+            this->tor_des =  -tor_des / GEAR_RATIO / 1.88;     // 转子端转矩 = 输出端转矩 / 减速比
+            this->spd_des =  -spd_des * GEAR_RATIO * 1.88;     // 转子端速度 = 输出端速度 * 减速比
+            this->pos_des =  -(pos_des + 2.231182) * GEAR_RATIO * 1.88;     // 转子端位置 = 输出端位置 * 减速比
+            this->k_pos =  k_pos / GEAR_RATIO / GEAR_RATIO;  // 位置增益需要考虑两次减速比
+            this->k_spd =  k_spd / GEAR_RATIO / GEAR_RATIO;   // 速度增益需要考虑两次减速比
+        }
+        else
+        {
+            // 如果num不在预期范围内，打印错误信息
+            std::cerr << "Error: Invalid motor number " << num << ". Valid numbers are 0, 1, or 2." << std::endl;
+            return;
+        }
     }
     else
     {
@@ -168,12 +226,6 @@ void Motor::Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float
         std::cerr << "Error: Invalid motor ID " << id << ". Valid IDs are 0, 1, 2, or 3." << std::endl;
         return;
     }
-    // 设置电机控制参数
-    this->tor_des = tor_des;
-    this->spd_des = spd_des;
-    this->pos_des = pos_des;
-    this->k_pos = k_pos;
-    this->k_spd = k_spd;
 }
 
 

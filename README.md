@@ -46,3 +46,8 @@ SYMLINK+="ttyMotorD", MODE="0666"
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
+
+
+## 6月19日：
+
+- 完成所有机器狗电机零点标定，完成机器狗站立demo。机器狗保护机制待添加，电机初始化漏洞待完善，imu待添加...
