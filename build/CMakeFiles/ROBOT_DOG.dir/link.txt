@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/ROBOT_DOG.dir/main.cpp.o CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o -o ROBOT_DOG  -lpthread 
+/usr/bin/c++ -g CMakeFiles/ROBOT_DOG.dir/main.cpp.o CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.o CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o -o ROBOT_DOG  -lpthread 

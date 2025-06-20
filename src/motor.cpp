@@ -241,6 +241,168 @@ void Motor::updateFeedback(const RecvData_t& recv_data) {
     err = recv_data.fbk.MError;  // 错误代码
 }
 
+float Motor::getTorque(int16_t id,int16_t num) const
+{
+    if(id == 0)
+    {
+        if(num == 0)
+            return (tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 1)
+            return -(tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 2)
+            return (tor * GEAR_RATIO * 1.88); // 转子端转矩 = 输出端转矩 / 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 1)
+    {
+        if(num == 0)
+            return (tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 1)
+            return (tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 2)
+            return -(tor * GEAR_RATIO * 1.88); // 转子端转矩 = 输出端转矩 / 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 2)
+    {
+        if(num == 0)
+            return -(tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 1)
+            return -(tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 2)
+            return (tor * GEAR_RATIO * 1.88); // 转子端转矩 = 输出端转矩 / 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 3)
+    {
+        if(num == 0)
+            return -(tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 1)
+            return (tor * GEAR_RATIO); // 转子端转矩 = 输出端转矩 / 减速比
+        else if(num == 2)
+            return -(tor * GEAR_RATIO * 1.88); // 转子端转矩 = 输出端转矩 / 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else
+    {
+        // 如果id不在预期范围内，打印错误信息并返回0
+        std::cerr << "Error: Invalid motor ID " << id << ". Valid IDs are 0, 1, 2, or 3." << std::endl;
+        return 0.0f;
+    }
+}
+
+float Motor::getSpeed(int16_t id,int16_t num) const
+{
+    if(id == 0)
+    {
+        if(num == 0)
+            return (spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 1)
+            return -(spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 2)
+            return (spd / GEAR_RATIO / 1.88); // 转子端速度 = 输出端速度 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 1)
+    {
+        if(num == 0)
+            return (spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 1)
+            return (spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 2)
+            return -(spd / GEAR_RATIO / 1.88); // 转子端速度 = 输出端速度 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 2)
+    {
+        if(num == 0)
+            return -(spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 1)
+            return -(spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 2)
+            return (spd / GEAR_RATIO / 1.88); // 转子端速度 = 输出端速度 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 3)
+    {
+        if(num == 0)
+            return -(spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 1)
+            return (spd / GEAR_RATIO); // 转子端速度 = 输出端速度 * 减速比
+        else if(num == 2)
+            return -(spd / GEAR_RATIO / 1.88); // 转子端速度 = 输出端速度 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else
+    {
+        // 如果id不在预期范围内，打印错误信息并返回0
+        std::cerr << "Error: Invalid motor ID " << id << ". Valid IDs are 0, 1, 2, or 3." << std::endl;
+        return 0.0f;
+    }
+}
+
+float Motor::getPosition(int16_t id,int16_t num) const
+{
+    if(id == 0)
+    {
+        if(num == 0)
+            return (pos / GEAR_RATIO - 0.917742); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 1)
+            return (-(pos / GEAR_RATIO)  + 1.775659); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 2)
+            return (pos / GEAR_RATIO / 1.88 - 3.205968); // 转子端位置 = 输出端位置 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 1)
+    {
+        if(num == 0)
+            return (pos / GEAR_RATIO  - 0.83411); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 1)
+            return (pos / GEAR_RATIO + 0.950479); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 2)
+            return (-(pos / GEAR_RATIO / 1.88) - 2.6572986); // 转子端位置 = 输出端位置 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 2)
+    {
+        if(num == 0)
+            return (-(pos / GEAR_RATIO) - 0.036858); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 1)
+            return (-(pos / GEAR_RATIO) + 1.4168); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 2)
+            return (pos / GEAR_RATIO / 1.88 - 3.2397); // 转子端位置 = 输出端位置 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else if (id == 3)
+    {
+        if(num == 0)
+            return (-(pos / GEAR_RATIO) + 0.414653); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 1)
+            return (pos / GEAR_RATIO + 0.42181); // 转子端位置 = 输出端位置 * 减速比
+        else if(num == 2)
+            return (-(pos / GEAR_RATIO / 1.88) - 2.231182); // 转子端位置 = 输出端位置 * 减速比
+        else
+            return 0.0f; // 如果num不在预期范围内，返回0
+    }
+    else
+    {
+        // 如果id不在预期范围内，打印错误信息并返回0
+        std::cerr << "Error: Invalid motor ID " << id << ". Valid IDs are 0, 1, 2, or 3." << std::endl;
+        return 0.0f;
+    }
+}
+
 // 创建控制数据包
 // 参数:
 //   motor_id: 电机ID

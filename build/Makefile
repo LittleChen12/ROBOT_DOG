@@ -153,6 +153,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/algorithm_control.o: src/algorithm_control.cpp.o
+.PHONY : src/algorithm_control.o
+
+# target to build an object file
+src/algorithm_control.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.o
+.PHONY : src/algorithm_control.cpp.o
+
+src/algorithm_control.i: src/algorithm_control.cpp.i
+.PHONY : src/algorithm_control.i
+
+# target to preprocess a source file
+src/algorithm_control.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.i
+.PHONY : src/algorithm_control.cpp.i
+
+src/algorithm_control.s: src/algorithm_control.cpp.s
+.PHONY : src/algorithm_control.s
+
+# target to generate assembly for a file
+src/algorithm_control.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.s
+.PHONY : src/algorithm_control.cpp.s
+
 src/motor.o: src/motor.cpp.o
 .PHONY : src/motor.o
 
@@ -237,6 +261,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/algorithm_control.o"
+	@echo "... src/algorithm_control.i"
+	@echo "... src/algorithm_control.s"
 	@echo "... src/motor.o"
 	@echo "... src/motor.i"
 	@echo "... src/motor.s"

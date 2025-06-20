@@ -81,12 +81,12 @@ clean: CMakeFiles/ROBOT_DOG.dir/clean
 CMakeFiles/ROBOT_DOG.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target ROBOT_DOG"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target ROBOT_DOG"
 .PHONY : CMakeFiles/ROBOT_DOG.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ROBOT_DOG.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ROBOT_DOG.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles 0
 .PHONY : CMakeFiles/ROBOT_DOG.dir/rule

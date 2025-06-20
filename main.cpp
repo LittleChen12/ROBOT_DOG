@@ -14,6 +14,7 @@
 #include "inc/motor.hpp"
 #include "inc/common.hpp"
 #include "inc/motor_control.hpp"
+#include "inc/algorithm_control.hpp"
 
 // 函数声明
 void print_statistics();
@@ -35,10 +36,15 @@ float _targetPos_2[12] = {0.0, 0.67, -1.3, 0.0, 0.67, -1.3,
 float _targetPos_3[12] = {-0.35, 1.36, -2.65, 0.35, 1.36, -2.65,
                             -0.5, 1.36, -2.65, 0.5, 1.36, -2.65};
 
+float _startPos[12];
+
+float _duration_0 = 500;                        
 float _duration_1 = 500;   
 float _duration_2 = 500; 
 float _duration_3 = 1000;   
 float _duration_4 = 900;   
+
+float _percent_0 = 0;
 float _percent_1 = 0;    
 float _percent_2 = 0;    
 float _percent_3 = 0;    
@@ -84,9 +90,7 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < NUM_CHANNELS; ++i) {
             for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
                 // 更新电机控制参数，考虑减速比
-                g_pos_des = _targetPos_1[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
-                
-                g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
+                g_motors[i][j].Motor_SetControlParams(i, j, 0, 0, 0, 0, 0);//上电后先让电机处于停止状态
             }
         }
     } 
@@ -96,25 +100,61 @@ int main(int argc, char* argv[]) {
     }
 
     std::vector<std::thread> threads;
-
     // 为每个通道创建线程
     for (int i = 0; i < NUM_CHANNELS; ++i) {
         threads.emplace_back([i]() {
+            // 获取当前线程ID
+            pthread_t thread_id = pthread_self();
+
+            // 设置线程优先级
+            struct sched_param param;
+            param.sched_priority = sched_get_priority_max(SCHED_FIFO);
+            if (pthread_setschedparam(thread_id, SCHED_FIFO, &param) != 0) {
+                std::cerr << "Failed to set thread priority for channel " << i << std::endl;
+            }
+
+            // 设置线程的 CPU 亲和性（分配到核心 0）
+            cpu_set_t cpuset;
+            CPU_ZERO(&cpuset);
+            CPU_SET(0, &cpuset); // 核心 0
+            if (pthread_setaffinity_np(thread_id, sizeof(cpu_set_t), &cpuset) != 0) {
+                std::cerr << "Failed to set CPU affinity for channel " << i << std::endl;
+            }
+
             // 通道线程函数
             channel_thread(i);
         });
+    }
 
-        // 获取线程ID并设置优先级
-        pthread_t thread_id = get_pthread_id(threads.back());
+    // 初始化算法控制线程
+    threads.emplace_back([]() {
+        // 获取当前线程ID
+        pthread_t thread_id = pthread_self();
+
+        // 设置线程优先级
         struct sched_param param;
         param.sched_priority = sched_get_priority_max(SCHED_FIFO);
         if (pthread_setschedparam(thread_id, SCHED_FIFO, &param) != 0) {
-            std::cerr << "Failed to set thread priority for channel " << i << std::endl;
+            std::cerr << "Failed to set thread priority for algorithm control thread." << std::endl;
         }
-    }
+
+        // 设置线程的 CPU 亲和性（分配到核心 1）
+        cpu_set_t cpuset;
+        CPU_ZERO(&cpuset);
+        CPU_SET(1, &cpuset); // 核心 1
+        if (pthread_setaffinity_np(thread_id, sizeof(cpu_set_t), &cpuset) != 0) {
+            std::cerr << "Failed to set CPU affinity for algorithm control thread." << std::endl;
+        }
+
+        // 调用算法控制线程的功能性内容
+        algorithm_control_thread();
+    });
+    
     std::cout << "All channel threads started." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(2));//等待通道线程串口的打开
+
     // 主循环
+    int16_t tick_tick = 0; // 用于计时的变量
     while (g_running) 
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -122,18 +162,33 @@ int main(int argc, char* argv[]) {
         {
             std::lock_guard<std::mutex> lock(g_motor_mutex);
 
-            if (_percent_1 < 1){
+            // 状态0 停止电机，并获取电机的当前位置
+            if (_percent_0 < 1) 
+            {
+                _percent_0 += (float)1 / _duration_0;
+                _percent_0 = _percent_0 > 1 ? 1 : _percent_0;
+                for (int i = 0; i < NUM_CHANNELS; ++i) {
+                    for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                        // 获取电机的当前位置
+                        g_motors[i][j].Motor_SetControlParams(i, j, 0, 0, 0, 0, 0);
+                        _startPos[i * MOTORS_PER_CHANNEL + j] = g_motors[i][j].getPosition(i,j);
+                    }
+                }
+            }
+            // 状态0 -> 状态1 进入目标位置1
+            if ((_percent_0 == 1) &&(_percent_1 < 1))
+            {
                 _percent_1 += (float)1 / _duration_1;
                 _percent_1 = _percent_1 > 1 ? 1 : _percent_1;
                 for (int i = 0; i < NUM_CHANNELS; ++i) {
                     for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
                         // 更新电机控制参数，考虑减速比
-                        g_pos_des = _targetPos_1[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
-                        
+                        g_pos_des = (1 - _percent_1) * _startPos[i * MOTORS_PER_CHANNEL + j] + _percent_1 * _targetPos_1[i * MOTORS_PER_CHANNEL + j];  // 使用预定义的目标位置
                         g_motors[i][j].Motor_SetControlParams(i, j, g_tor_des, g_spd_des, g_pos_des, g_k_pos, g_k_spd);
                     }
                 }
             }
+            // 状态1 -> 状态2 起立
             if ((_percent_1 == 1)&&(_percent_2 < 1))
             {
                 _percent_2 += (float)1 / _duration_2;
@@ -147,6 +202,7 @@ int main(int argc, char* argv[]) {
                     }
                 }                
             }
+            // 状态2 -> 状态3 维持机身
             if ((_percent_1 == 1)&&(_percent_2 == 1)&&(_percent_3<1))
             {
                 _percent_3 += (float)1 / _duration_3;
@@ -161,6 +217,7 @@ int main(int argc, char* argv[]) {
                 }                    
     
             }
+            // 状态3 -> 状态4
             if ((_percent_1 == 1)&&(_percent_2 == 1)&&(_percent_3==1)&&((_percent_4<=1)))
             {
                 _percent_4 += (float)1 / _duration_4;
@@ -175,117 +232,39 @@ int main(int argc, char* argv[]) {
                 }      
             }
         }
-        // 更新电机状态
+        if(tick_tick++ > 100) // 每100次循环打印一次状态
         {
-            std::lock_guard<std::mutex> lock(g_motor_mutex);
+            tick_tick = 0; // 重置计时器
+        // 更新电机状态
+            {
+                std::lock_guard<std::mutex> lock(g_motor_mutex);
 
-            for (int i = 0; i < NUM_CHANNELS; ++i) {
-                for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
-                    // 获取电机状态并转换为输出端数据
-                    float tor = 0.0f;
-                    float spd = 0.0f; 
-                    float pos = 0.0f;
-                    if(i == 0)
-                    {
-                        if(j == 0)
-                        {
-                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO - 0.917742;// 转换为输出端位置          
-                        }
-                        else if(j == 1)
-                        {
-                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO + 1.775659;// 转换为输出端位置                          
-                        }
-                        else
-                        {
-                            tor = g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
-                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 3.205968;// 转换为输出端位置
-                        }
-                    }
-                    if(i == 1)
-                    {
-                        if(j == 0)
-                        {
-                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO - 0.83411;// 转换为输出端位置         
-                        }
-                        else if(j == 1)
-                        {
-                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO + 0.950479;// 转换为输出端位置                           
-                        }
-                        else
-                        {
-                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
-                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                            pos = -g_motors[i][j].getPosition()/ GEAR_RATIO / 1.88 - 2.6572986;// 转换为输出端位置
-                        }
-                    }
-                    if(i == 2)
-                    {
-                        if(j == 0)
-                        {
-                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO - 0.036858;// 转换为输出端位置        
-                        }
-                        else if(j == 1)
-                        {
-                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO + 1.4168;// 转换为输出端位置                        
-                        }
-                        else
-                        {
-                            tor = g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
-                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 3.2397;// 转换为输出端位置
-                        }
-                    }
-                    if(i == 3)
-                    {
-                        if(j == 0)
-                        {
-                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO + 0.414653;// 转换为输出端位置        
-                        }
-                        else if(j == 1)
-                        {
-                            tor = g_motors[i][j].getTorque() * GEAR_RATIO;  // 转换为输出端转矩
-                            spd = g_motors[i][j].getSpeed() / GEAR_RATIO;   // 转换为输出端速度
-                            pos = g_motors[i][j].getPosition() / GEAR_RATIO + 0.42181;// 转换为输出端位置                       
-                        }
-                        else
-                        {
-                            tor = -g_motors[i][j].getTorque() * GEAR_RATIO * 1.88;  // 转换为输出端转矩   (1.88是小腿电机额外齿轮的减速比)
-                            spd = -g_motors[i][j].getSpeed() / GEAR_RATIO/ 1.88;   // 转换为输出端速度    (1.88是小腿电机额外齿轮的减速比)
-                            pos = -g_motors[i][j].getPosition() / GEAR_RATIO / 1.88 - 2.231182;// 转换为输出端位置
-                        }
-                    }
+                for (int i = 0; i < NUM_CHANNELS; ++i) {
+                    for (int j = 0; j < MOTORS_PER_CHANNEL; ++j) {
+                        // 获取电机状态并转换为输出端数据
+                        float tor = 0.0f;
+                        float spd = 0.0f; 
+                        float pos = 0.0f;
+                        tor = g_motors[i][j].getTorque(i,j);  // 输出端转矩
+                        spd = g_motors[i][j].getSpeed(i,j);   // 输出端速度
+                        pos = g_motors[i][j].getPosition(i,j);// 输出端位置          
+                        float temp = g_motors[i][j].getTemperature();
+                        uint16_t err = g_motors[i][j].getError();
 
-                    float temp = g_motors[i][j].getTemperature();
-                    uint16_t err = g_motors[i][j].getError();
-
-                    //打印电机状态（输出端的值）
-                    std::cout << "Channel " << i << ", Motor " << j
-                              << " - Output Torque: " << tor
-                              << ", Output Speed: " << spd
-                              << ", Output Position: " << pos
-                              << ", Temp: " << temp
-                              << ", Error: " << err << std::endl;
+                        //打印电机状态（输出端的值）
+                        std::cout << "Channel " << i << ", Motor " << j
+                                << " - Output Torque: " << tor
+                                << ", Output Speed: " << spd
+                                << ", Output Position: " << pos
+                                << ", Temp: " << temp
+                                << ", Error: " << err << std::endl;
+                    }
                 }
             }
-        }
 
-        //打印统计信息
-        print_statistics();
+            //打印统计信息
+            print_statistics();
+        }
     }
 
     // 清理资源

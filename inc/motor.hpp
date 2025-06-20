@@ -85,13 +85,13 @@ public:
     ControlData_t createControlPacket(uint8_t motor_id) const;
 
     // 获取当前转矩
-    float getTorque() const { return tor; }
+    float getTorque(int16_t id,int16_t num) const;
     
     // 获取当前速度
-    float getSpeed() const { return spd; }
+    float getSpeed(int16_t id,int16_t num) const;
     
     // 获取当前位置
-    float getPosition() const { return pos; }
+    float getPosition(int16_t id,int16_t num) const;
     
     // 获取当前温度
     float getTemperature() const { return temp; }
@@ -113,8 +113,10 @@ public:
     
     // 重置统计信息
     void resetStats();
+
     // 设置电机控制参数（重载函数，使用int16_t类型的ID和num）id为腿编号，num为每条腿上的电机编号
     void Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float spd_des, float pos_des, float k_pos, float k_spd);
+
 
 private:
     // 控制参数
