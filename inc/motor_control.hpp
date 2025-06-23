@@ -5,6 +5,8 @@
 #include <vector>
 #include "motor.hpp"
 #include "common.hpp"
+#include <atomic>  
+#include <mutex>   
 
 // 函数声明
 void channel_thread(int channel);

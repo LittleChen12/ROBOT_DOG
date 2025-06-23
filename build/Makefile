@@ -177,6 +177,30 @@ src/algorithm_control.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.s
 .PHONY : src/algorithm_control.cpp.s
 
+src/imu.o: src/imu.cpp.o
+.PHONY : src/imu.o
+
+# target to build an object file
+src/imu.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o
+.PHONY : src/imu.cpp.o
+
+src/imu.i: src/imu.cpp.i
+.PHONY : src/imu.i
+
+# target to preprocess a source file
+src/imu.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.i
+.PHONY : src/imu.cpp.i
+
+src/imu.s: src/imu.cpp.s
+.PHONY : src/imu.s
+
+# target to generate assembly for a file
+src/imu.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.s
+.PHONY : src/imu.cpp.s
+
 src/motor.o: src/motor.cpp.o
 .PHONY : src/motor.o
 
@@ -225,6 +249,30 @@ src/motor_control.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.s
 .PHONY : src/motor_control.cpp.s
 
+src/motor_protect.o: src/motor_protect.cpp.o
+.PHONY : src/motor_protect.o
+
+# target to build an object file
+src/motor_protect.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o
+.PHONY : src/motor_protect.cpp.o
+
+src/motor_protect.i: src/motor_protect.cpp.i
+.PHONY : src/motor_protect.i
+
+# target to preprocess a source file
+src/motor_protect.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.i
+.PHONY : src/motor_protect.cpp.i
+
+src/motor_protect.s: src/motor_protect.cpp.s
+.PHONY : src/motor_protect.s
+
+# target to generate assembly for a file
+src/motor_protect.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ROBOT_DOG.dir/build.make CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.s
+.PHONY : src/motor_protect.cpp.s
+
 src/serial_init.o: src/serial_init.cpp.o
 .PHONY : src/serial_init.o
 
@@ -264,12 +312,18 @@ help:
 	@echo "... src/algorithm_control.o"
 	@echo "... src/algorithm_control.i"
 	@echo "... src/algorithm_control.s"
+	@echo "... src/imu.o"
+	@echo "... src/imu.i"
+	@echo "... src/imu.s"
 	@echo "... src/motor.o"
 	@echo "... src/motor.i"
 	@echo "... src/motor.s"
 	@echo "... src/motor_control.o"
 	@echo "... src/motor_control.i"
 	@echo "... src/motor_control.s"
+	@echo "... src/motor_protect.o"
+	@echo "... src/motor_protect.i"
+	@echo "... src/motor_protect.s"
 	@echo "... src/serial_init.o"
 	@echo "... src/serial_init.i"
 	@echo "... src/serial_init.s"

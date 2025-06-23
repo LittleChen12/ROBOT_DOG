@@ -31,11 +31,11 @@ bool send_command_and_wait(int fd, Motor::ControlData_t& cmd, Motor::RecvData_t&
 
         // 检查是否有数据可读
         fd_set readfds;
-        FD_ZERO(&readfds);
-        FD_SET(fd, &readfds);
+        FD_ZERO(&readfds);//清空readfds集合
+        FD_SET(fd, &readfds);//将fd添加到readfds集合中
 
         struct timeval timeout;
-        timeout.tv_sec = 0;
+        timeout.tv_sec = 0;//s
         timeout.tv_usec = 1000;  // 1ms
 
         int ready = select(fd + 1, &readfds, NULL, NULL, &timeout);
@@ -43,7 +43,7 @@ bool send_command_and_wait(int fd, Motor::ControlData_t& cmd, Motor::RecvData_t&
             // 读取数据
             ssize_t bytes_read = read(fd, recv_buffer, MAX_BUFFER_SIZE);
             if (bytes_read >= sizeof(Motor::RecvData_t)) {
-                Motor::RecvData_t* recv_packet = reinterpret_cast<Motor::RecvData_t*>(recv_buffer);
+                Motor::RecvData_t* recv_packet = reinterpret_cast<Motor::RecvData_t*>(recv_buffer);//将缓冲区recv_buffer转换为接收数据包结构体指针
 
                 // 验证数据包头
                 if (recv_packet->head[0] == 0xFD && recv_packet->head[1] == 0xEE) {

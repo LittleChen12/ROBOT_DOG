@@ -200,4 +200,6 @@ CMakeFiles/ROBOT_DOG.dir/main.cpp.o: /home/zhu/Desktop/ROBOT_DOG/main.cpp \
  /home/zhu/Desktop/ROBOT_DOG/inc/motor_control.hpp \
  /home/zhu/Desktop/ROBOT_DOG/inc/motor.hpp \
  /home/zhu/Desktop/ROBOT_DOG/inc/common.hpp \
- /home/zhu/Desktop/ROBOT_DOG/inc/algorithm_control.hpp
+ /home/zhu/Desktop/ROBOT_DOG/inc/algorithm_control.hpp \
+ /home/zhu/Desktop/ROBOT_DOG/inc/motor_protect.hpp \
+ /home/zhu/Desktop/ROBOT_DOG/inc/imu.hpp

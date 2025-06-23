@@ -97,10 +97,24 @@ CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zhu/Desktop/ROBOT_DOG/src/algorithm_control.cpp -o CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.s
 
+CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o: CMakeFiles/ROBOT_DOG.dir/flags.make
+CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o: ../src/imu.cpp
+CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o: CMakeFiles/ROBOT_DOG.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o -MF CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o.d -o CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o -c /home/zhu/Desktop/ROBOT_DOG/src/imu.cpp
+
+CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/zhu/Desktop/ROBOT_DOG/src/imu.cpp > CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.i
+
+CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zhu/Desktop/ROBOT_DOG/src/imu.cpp -o CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.s
+
 CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o: CMakeFiles/ROBOT_DOG.dir/flags.make
 CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o: ../src/motor.cpp
 CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o: CMakeFiles/ROBOT_DOG.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o -MF CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o.d -o CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o -c /home/zhu/Desktop/ROBOT_DOG/src/motor.cpp
 
 CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.i: cmake_force
@@ -114,7 +128,7 @@ CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.s: cmake_force
 CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o: CMakeFiles/ROBOT_DOG.dir/flags.make
 CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o: ../src/motor_control.cpp
 CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o: CMakeFiles/ROBOT_DOG.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o -MF CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o.d -o CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o -c /home/zhu/Desktop/ROBOT_DOG/src/motor_control.cpp
 
 CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.i: cmake_force
@@ -125,10 +139,24 @@ CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zhu/Desktop/ROBOT_DOG/src/motor_control.cpp -o CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.s
 
+CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o: CMakeFiles/ROBOT_DOG.dir/flags.make
+CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o: ../src/motor_protect.cpp
+CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o: CMakeFiles/ROBOT_DOG.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o -MF CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o.d -o CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o -c /home/zhu/Desktop/ROBOT_DOG/src/motor_protect.cpp
+
+CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/zhu/Desktop/ROBOT_DOG/src/motor_protect.cpp > CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.i
+
+CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/zhu/Desktop/ROBOT_DOG/src/motor_protect.cpp -o CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.s
+
 CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o: CMakeFiles/ROBOT_DOG.dir/flags.make
 CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o: ../src/serial_init.cpp
 CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o: CMakeFiles/ROBOT_DOG.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o -MF CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o.d -o CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o -c /home/zhu/Desktop/ROBOT_DOG/src/serial_init.cpp
 
 CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.i: cmake_force
@@ -143,8 +171,10 @@ CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.s: cmake_force
 ROBOT_DOG_OBJECTS = \
 "CMakeFiles/ROBOT_DOG.dir/main.cpp.o" \
 "CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.o" \
+"CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o" \
 "CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o" \
 "CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o" \
+"CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o" \
 "CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o"
 
 # External object files for target ROBOT_DOG
@@ -152,12 +182,14 @@ ROBOT_DOG_EXTERNAL_OBJECTS =
 
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/main.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.o
+ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/imu.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/motor.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o
+ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/build.make
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable ROBOT_DOG"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable ROBOT_DOG"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ROBOT_DOG.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

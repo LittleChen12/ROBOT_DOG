@@ -1,8 +1,6 @@
-CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.o: \
- /home/zhu/Desktop/ROBOT_DOG/src/algorithm_control.cpp \
- /usr/include/stdc-predef.h \
- /home/zhu/Desktop/ROBOT_DOG/inc/algorithm_control.hpp \
- /usr/include/c++/11/iostream \
+CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o: \
+ /home/zhu/Desktop/ROBOT_DOG/src/motor_protect.cpp \
+ /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/aarch64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/aarch64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -148,16 +146,24 @@ CMakeFiles/ROBOT_DOG.dir/src/algorithm_control.cpp.o: \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/chrono \
- /usr/include/c++/11/ratio /usr/include/c++/11/limits \
- /usr/include/c++/11/ctime /usr/include/c++/11/bits/parse_numbers.h \
- /usr/include/c++/11/thread /usr/include/c++/11/bits/std_thread.h \
- /usr/include/c++/11/tuple /usr/include/c++/11/utility \
- /usr/include/c++/11/bits/stl_relops.h /usr/include/c++/11/array \
- /usr/include/c++/11/bits/uses_allocator.h \
- /usr/include/c++/11/bits/invoke.h /usr/include/c++/11/bits/refwrap.h \
- /usr/include/c++/11/bits/unique_ptr.h \
- /usr/include/c++/11/bits/this_thread_sleep.h /usr/include/c++/11/atomic \
+ /usr/include/c++/11/bits/istream.tcc \
+ /home/zhu/Desktop/ROBOT_DOG/inc/motor_protect.hpp \
+ /home/zhu/Desktop/ROBOT_DOG/inc/common.hpp \
+ /home/zhu/Desktop/ROBOT_DOG/inc/motor.hpp \
+ /home/zhu/Desktop/ROBOT_DOG/inc/motor_control.hpp \
+ /usr/include/c++/11/vector /usr/include/c++/11/bits/stl_uninitialized.h \
+ /usr/include/c++/11/bits/stl_vector.h \
+ /usr/include/c++/11/bits/stl_bvector.h \
+ /usr/include/c++/11/bits/vector.tcc \
+ /home/zhu/Desktop/ROBOT_DOG/inc/motor.hpp \
+ /home/zhu/Desktop/ROBOT_DOG/inc/common.hpp /usr/include/c++/11/atomic \
  /usr/include/c++/11/bits/atomic_base.h \
  /usr/include/c++/11/bits/atomic_lockfree_defines.h \
- /home/zhu/Desktop/ROBOT_DOG/inc/imu.hpp
+ /usr/include/c++/11/mutex /usr/include/c++/11/tuple \
+ /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
+ /usr/include/c++/11/array /usr/include/c++/11/bits/uses_allocator.h \
+ /usr/include/c++/11/bits/invoke.h /usr/include/c++/11/chrono \
+ /usr/include/c++/11/ratio /usr/include/c++/11/limits \
+ /usr/include/c++/11/ctime /usr/include/c++/11/bits/parse_numbers.h \
+ /usr/include/c++/11/bits/std_mutex.h \
+ /usr/include/c++/11/bits/unique_lock.h
