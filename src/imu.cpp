@@ -7,9 +7,14 @@
 #include <cstring>
 #include <chrono>
 #include <iomanip>
+#include <sys/ioctl.h>
+#include <thread>
+
+
 uint64_t imu_tick;
 IMU imu;
 
+// CRC8计算
 uint8_t CRC8_Table(uint8_t* p, uint8_t counter)
 {
 	uint8_t crc8 = 0;
@@ -22,6 +27,7 @@ uint8_t CRC8_Table(uint8_t* p, uint8_t counter)
 	return (crc8);
 }
 
+//CRC16计算
 uint16_t CRC16_Table(uint8_t* p, uint8_t counter)
 {
 	uint16_t crc16 = 0;
@@ -47,12 +53,6 @@ IMU::IMU() {
     imu_data.Q3 = 0.0f;
     imu_data.Q4 = 0.0f;
     imu_data.Timestamp = 0;
-}
-
-//获取IMU数据
-void IMU::getData() {
-    // 在这里可以添加获取IMU数据的逻辑
-
 }
 
 
@@ -83,23 +83,29 @@ int IMU::create_imu_packet(uint8_t* buffer, IMU::FDILink_Status_t* FDILink, uint
 	buffer[8 + len - 1] = 0XFD;//帧尾
 	return 8 + len;
 }
-bool IMU::get_imu_packet(uint8_t imu_ID)
+
+// 支持多个ID的IMU包解析
+bool IMU::get_imu_packet(const std::vector<uint8_t>& id_list)
 {
-    // 发送IMU请求数据包
-    uint8_t p_buff[12];
-    uint8_t buffer[4] = {imu_ID, 0, 0, 0};
-    create_imu_packet(p_buff, &FDILink_Status, 0xA0, buffer, sizeof(buffer));
-    tcflush(imu_fd, TCIFLUSH);
-    ssize_t bytes_written = write(imu_fd, p_buff, 12);
-    if (bytes_written != 12) {
-        std::cerr << "Failed to write to IMU" << std::endl;
-        return false;
-    }
+    struct PacketInfo {
+        int data_len;
+        int frame_len;
+        void* target_struct;
+    };
+    // 维护ID到结构体的映射
+    std::map<uint8_t, PacketInfo> id_map = {
+        {0x41, {sizeof(IMUData_t),     8 + sizeof(IMUData_t),     &imu_data}},
+        {0x60, {sizeof(imu_body_vel), 8 + sizeof(IMUData_MSG_BODY_VEL), &imu_body_vel}},
+        {0x62, {sizeof(imu_body_acc), 8 + sizeof(IMUData_MSG_BODY_ACCELERATION), &imu_body_acc}},
+        // 可扩展更多ID
+    };
 
     uint8_t recv_buffer[256];
     int recv_len = 0;
-    auto start_time = std::chrono::steady_clock::now();
+    std::map<uint8_t, bool> found_map;
+    for (auto id : id_list) found_map[id] = false;
 
+    auto start_time = std::chrono::steady_clock::now();
     while (std::chrono::duration_cast<std::chrono::milliseconds>(
                std::chrono::steady_clock::now() - start_time).count() < COMM_TIMEOUT_MS)
     {
@@ -109,53 +115,65 @@ bool IMU::get_imu_packet(uint8_t imu_ID)
 
         struct timeval timeout;
         timeout.tv_sec = 0;
-        timeout.tv_usec = 3000; // 3ms
+        timeout.tv_usec = 3000;
 
         int ready = select(imu_fd + 1, &readfds, NULL, NULL, &timeout);
-        if (ready > 0 && FD_ISSET(imu_fd, &readfds))
-        {
+        if (ready < 0) {
+            std::cerr << "[IMU][ERROR] select() failed in get_imu_packet: " << strerror(errno) << std::endl;
+            return false;
+        }
+        if (ready == 0) continue;
+
+        if (FD_ISSET(imu_fd, &readfds)) {
             ssize_t bytes_read = read(imu_fd, recv_buffer + recv_len, sizeof(recv_buffer) - recv_len);
             if (bytes_read > 0) {
                 recv_len += bytes_read;
-
-                // 查找完整数据包
-                for (int i = 0; i <= recv_len - 56; ++i) {
-                    if (recv_buffer[i] == 0xFC && recv_buffer[i + 1] == imu_ID) {
-                        uint8_t data_len = recv_buffer[i + 2];
-                        if (data_len != 48) continue; // 只处理48字节数据区的数据包
-                        if (recv_buffer[i + 55] != 0xFD) continue; // 帧尾校验
-
-                        // CRC8校验
-                        uint8_t crc8 = CRC8_Table(recv_buffer + i, 4);
-                        if (crc8 != recv_buffer[i + 4]) {
-                            std::cerr << "[调试] CRC8校验失败" << std::endl;
-                            continue;
+                // 遍历所有ID，查找包
+                for (auto id : id_list) {
+                    if (!id_map.count(id)) continue;
+                    auto& info = id_map[id];
+                    for (int i = 0; i <= recv_len - info.frame_len; ++i) {
+                        if (recv_buffer[i] == 0xFC && recv_buffer[i + 1] == id) {
+                            if (recv_buffer[i + 2] != info.data_len) continue;
+                            if (recv_buffer[i + info.frame_len - 1] != 0xFD) continue;
+                            uint8_t crc8 = CRC8_Table(recv_buffer + i, 4);
+                            if (crc8 != recv_buffer[i + 4]) {
+                                std::cerr << "[IMU][ERROR] CRC8 check failed for ID: 0x"
+                                          << std::hex << int(id) << std::dec << std::endl;
+                                return false;
+                            }
+                            uint16_t crc16_recv = (recv_buffer[i + 5] << 8) | recv_buffer[i + 6];
+                            uint16_t crc16_calc = CRC16_Table(recv_buffer + i + 7, info.data_len);
+                            if (crc16_recv != crc16_calc) {
+                                std::cerr << "[IMU][ERROR] CRC16 check failed for ID: 0x"
+                                          << std::hex << int(id) << std::dec << std::endl;
+                                return false;
+                            }
+                            std::memcpy(info.target_struct, recv_buffer + i + 7, info.data_len);//根据ID找到对应的结构体并复制数据
+                            found_map[id] = true;
                         }
-
-                        // CRC16校验
-                        uint16_t crc16_recv = (recv_buffer[i + 5] << 8) | recv_buffer[i + 6];
-                        uint16_t crc16_calc = CRC16_Table(recv_buffer + i + 7, 48);
-                        if (crc16_recv != crc16_calc) {
-                            std::cerr << "[调试] CRC16校验失败" << std::endl;
-                            continue;
-                        }
-
-                        // 解析数据区到IMUData_t
-                        std::memcpy(&imu_data, recv_buffer + i + 7, sizeof(IMUData_t)); // IMUData_t应为48字节
-
-                        //std::cout << "[调试] IMU数据包已写入结构体，起始位置: " << i << std::endl;
-                        imu_tick++;
-                        return true;
                     }
                 }
-                if (recv_len > 200) recv_len = 0;
+                // 如果所有ID都找到了，直接返回
+                bool all_found = true;
+                for (auto& kv : found_map) {
+                    if (!kv.second) { 
+                        all_found = false; break; }
+                }
+                if (all_found) {
+                    imu_tick++;
+                    return true;
+                }
+                if (recv_len > 250) recv_len = 0;
             }
         }
     }
-    std::cerr << "Timeout or no valid IMU packet received!" << std::endl;
+    std::cerr << "[IMU][WARN] get_imu_packet timeout or not all IDs found" << std::endl;
     return false;
 }
 
+
+//初始化IMU串口
 void IMU::serial_init(const char* port_name) {
     // 打开串口设备
     imu_fd = open(port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
@@ -175,9 +193,7 @@ void IMU::serial_init(const char* port_name) {
     fcntl(imu_fd, F_SETFL, 0);
 }
 
-/**
- * 配置串口参数，提高稳定性
- */
+//配置串口参数，提高稳定性
 bool IMU::configure_imu_serial(int fd) {
     struct termios tty;
     memset(&tty, 0, sizeof(tty));

@@ -2,6 +2,8 @@
 #define    IMU_HPP
 
 #include <stdint.h>
+#include <map>
+#include <vector>
 
 #define LINE(arg...) arg
 
@@ -24,9 +26,8 @@ public:
         uint8_t 			Buffer[256];
     }FDILink_Status_t;
 
-
     /**
-     * @brief imu数据
+     * @brief imu数据(id:0x41)
      * 用于存储从IMU接收到的数据
      */
     typedef struct {
@@ -43,6 +44,29 @@ public:
 		int64_t Timestamp; // 时间戳
     } __attribute__((packed)) IMUData_t;
 
+	    /**
+     * @brief imu机体系方向速度(id:0x60)
+     * 用于存储从IMU机体系方向速度
+     */
+    typedef struct {
+		float Velocity_X;  // X轴角加速度 m/s
+		float Velocity_Y;  // Y轴角加速度
+		float Velocity_Z;  // Z轴角加速度
+    } __attribute__((packed)) IMUData_MSG_BODY_VEL;
+
+	/**
+	 * @brief imu机体系方向加速度(id:0x62)
+	 * 用于存储从IMU机体系方向加速度
+	 */
+	typedef struct {
+		float Body_acceleration_X;  // X轴角加速度
+		float Body_acceleration_Y;  // Y轴角加速度
+		float Body_acceleration_Z;  // Z轴角加速度
+		float G_force;              // 重力加速度
+	} __attribute__((packed)) IMUData_MSG_BODY_ACCELERATION;
+
+	//后续可以添加更多的IMU数据结构体
+
     #pragma pack()  // 恢复默认的内存对齐
 
     //构造函数
@@ -52,13 +76,16 @@ public:
     //配置串口参数，提高稳定性
     bool configure_imu_serial(int fd);
     //获取IMU数据包
-    bool get_imu_packet(uint8_t imu_ID); 
+    bool get_imu_packet(const std::vector<uint8_t>& id_list); 
     //构建IMU请求数据包，返回帧长度
     int create_imu_packet(uint8_t* buffer, FDILink_Status_t* FDILink, uint8_t type, void* buf, int len);
-    //获取IMU数据
-    void getData();
 
 	IMUData_t imu_data; // 存储IMU数据的成员变量
+	IMUData_MSG_BODY_VEL imu_body_vel; // 存储IMU角加速度数据的成员变量
+	IMUData_MSG_BODY_ACCELERATION imu_body_acc; // 存储IMU机体系方向加速度数据的成员变量
+
+	// 获取FDILink状态
+	FDILink_Status_t getFDILinkStatus() const { return FDILink_Status; }
 private:
     FDILink_Status_t FDILink_Status; // 存储FDILink状态的成员变量
     int imu_fd;

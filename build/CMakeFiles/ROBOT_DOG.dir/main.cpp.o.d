@@ -202,4 +202,9 @@ CMakeFiles/ROBOT_DOG.dir/main.cpp.o: /home/zhu/Desktop/ROBOT_DOG/main.cpp \
  /home/zhu/Desktop/ROBOT_DOG/inc/common.hpp \
  /home/zhu/Desktop/ROBOT_DOG/inc/algorithm_control.hpp \
  /home/zhu/Desktop/ROBOT_DOG/inc/motor_protect.hpp \
- /home/zhu/Desktop/ROBOT_DOG/inc/imu.hpp
+ /home/zhu/Desktop/ROBOT_DOG/inc/imu.hpp /usr/include/c++/11/map \
+ /usr/include/c++/11/bits/stl_tree.h \
+ /usr/include/c++/11/bits/node_handle.h \
+ /usr/include/c++/11/bits/stl_map.h \
+ /usr/include/c++/11/bits/stl_multimap.h \
+ /usr/include/c++/11/bits/erase_if.h
