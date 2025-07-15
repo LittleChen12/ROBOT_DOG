@@ -3,7 +3,11 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/usr/local/lib/python3.10/dist-packages/torch/include",
+                "/usr/local/lib/python3.10/dist-packages/torch/include/torch/csrc/api/include",
+                "/usr/local/lib",
+                "/usr/local/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

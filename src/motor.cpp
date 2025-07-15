@@ -78,13 +78,13 @@ Motor::Motor() : tor_des(0), spd_des(0), pos_des(0), k_pos(0), k_spd(0),
 //   pos_des: 目标位置
 //   k_pos: 位置增益
 //   k_spd: 速度增益
-void Motor::setControlParams(float tor_des, float spd_des, float pos_des, float k_pos, float k_spd) {
-    this->tor_des = tor_des;
-    this->spd_des = spd_des;
-    this->pos_des = pos_des;
-    this->k_pos = k_pos;
-    this->k_spd = k_spd;
-}
+// void Motor::setControlParams(float tor_des, float spd_des, float pos_des, float k_pos, float k_spd) {
+//     // this->tor_des = tor_des;
+//     // this->spd_des = spd_des;
+//     // this->pos_des = pos_des;
+//     // this->k_pos = k_pos;
+//     // this->k_spd = k_spd;
+// }
 
 void Motor::Motor_SetControlParams(int16_t id, int16_t num, float tor_des, float spd_des, float pos_des, float k_pos, float k_spd)
 {

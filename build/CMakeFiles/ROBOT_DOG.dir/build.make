@@ -188,6 +188,17 @@ ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/motor_control.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/motor_protect.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/src/serial_init.cpp.o
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/build.make
+ROBOT_DOG: /usr/local/lib/python3.10/dist-packages/torch/lib/libtorch.so
+ROBOT_DOG: /usr/local/lib/python3.10/dist-packages/torch/lib/libc10.so
+ROBOT_DOG: /usr/lib/aarch64-linux-gnu/libcuda.so
+ROBOT_DOG: /usr/local/cuda-12.6/lib64/libnvrtc.so
+ROBOT_DOG: /usr/local/cuda-12.6/lib64/libnvToolsExt.so
+ROBOT_DOG: /usr/local/cuda-12.6/lib64/libcudart.so
+ROBOT_DOG: /usr/local/lib/python3.10/dist-packages/torch/lib/libc10_cuda.so
+ROBOT_DOG: /usr/local/lib/python3.10/dist-packages/torch/lib/libc10_cuda.so
+ROBOT_DOG: /usr/local/lib/python3.10/dist-packages/torch/lib/libc10.so
+ROBOT_DOG: /usr/local/cuda-12.6/lib64/libcudart.so
+ROBOT_DOG: /usr/local/cuda-12.6/lib64/libnvToolsExt.so
 ROBOT_DOG: CMakeFiles/ROBOT_DOG.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zhu/Desktop/ROBOT_DOG/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable ROBOT_DOG"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ROBOT_DOG.dir/link.txt --verbose=$(VERBOSE)
